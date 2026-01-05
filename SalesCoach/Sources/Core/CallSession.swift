@@ -29,9 +29,9 @@ actor CallSession {
     
     // MARK: - Callbacks
     
-    private let onTranscriptUpdate: (TranscriptEvent) -> Void
-    private let onCoachingUpdate: (CoachingState) -> Void
-    private let onError: (Error) -> Void
+    private let onTranscriptUpdate: @Sendable (TranscriptEvent) -> Void
+    private let onCoachingUpdate: @Sendable (CoachingState) -> Void
+    private let onError: @Sendable (Error) -> Void
     
     // MARK: - Tasks
     
@@ -40,9 +40,9 @@ actor CallSession {
     init(
         settings: AppSettings,
         langfuseService: LangfuseService? = nil,
-        onTranscriptUpdate: @escaping (TranscriptEvent) -> Void,
-        onCoachingUpdate: @escaping (CoachingState) -> Void,
-        onError: @escaping (Error) -> Void
+        onTranscriptUpdate: @escaping @Sendable (TranscriptEvent) -> Void,
+        onCoachingUpdate: @escaping @Sendable (CoachingState) -> Void,
+        onError: @escaping @Sendable (Error) -> Void
     ) {
         self.settings = settings
         self.langfuseService = langfuseService
