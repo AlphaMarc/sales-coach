@@ -227,8 +227,9 @@ class AppState: ObservableObject {
     private func startRecordingTimer() {
         recordingStartTime = Date()
         recordingTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-            Task { @MainActor in
-                guard let self = self, let startTime = self.recordingStartTime else { return }
+            guard let self else { return }
+            Task { @MainActor [weak self] in
+                guard let self, let startTime = self.recordingStartTime else { return }
                 self.recordingDuration = Date().timeIntervalSince(startTime)
             }
         }
