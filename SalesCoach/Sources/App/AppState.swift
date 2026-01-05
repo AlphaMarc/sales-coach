@@ -146,17 +146,20 @@ class AppState: ObservableObject {
             settings: settings,
             langfuseService: langfuseService,
             onTranscriptUpdate: { [weak self] event in
-                Task { @MainActor in
+                guard let self else { return }
+                Task { @MainActor [weak self] in
                     self?.handleTranscriptEvent(event)
                 }
             },
             onCoachingUpdate: { [weak self] state in
-                Task { @MainActor in
+                guard let self else { return }
+                Task { @MainActor [weak self] in
                     self?.coachingState = state
                 }
             },
             onError: { [weak self] error in
-                Task { @MainActor in
+                guard let self else { return }
+                Task { @MainActor [weak self] in
                     self?.errorMessage = error.localizedDescription
                 }
             }
