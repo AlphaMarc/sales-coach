@@ -1,0 +1,81 @@
+name: SalesCoach
+options:
+  bundleIdPrefix: com.salescoach
+  deploymentTarget:
+    macOS: "14.0"
+  xcodeVersion: "15.2"
+  createIntermediateGroups: true
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    SWIFT_STRICT_CONCURRENCY: complete
+
+targets:
+  SalesCoach:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources
+        excludes:
+          - "**/.DS_Store"
+      - path: Resources
+        excludes:
+          - "**/.DS_Store"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.salescoach.app
+        PRODUCT_NAME: SalesCoach
+        INFOPLIST_FILE: Info.plist
+        CODE_SIGN_ENTITLEMENTS: SalesCoach.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        COMBINE_HIDPI_IMAGES: YES
+        ENABLE_HARDENED_RUNTIME: YES
+    entitlements:
+      path: SalesCoach.entitlements
+    info:
+      path: Info.plist
+      properties:
+        CFBundleName: SalesCoach
+        CFBundleDisplayName: Sales Coach
+        CFBundleIdentifier: $(PRODUCT_BUNDLE_IDENTIFIER)
+        CFBundleVersion: "1"
+        CFBundleShortVersionString: "0.1.0"
+        LSMinimumSystemVersion: $(MACOSX_DEPLOYMENT_TARGET)
+        NSMicrophoneUsageDescription: "Sales Coach needs microphone access to transcribe your calls."
+        NSHumanReadableCopyright: "Copyright © 2024. All rights reserved."
+        LSApplicationCategoryType: "public.app-category.business"
+    dependencies: []
+
+  SalesCoachTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Tests
+        excludes:
+          - "**/.DS_Store"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.salescoach.app.tests
+    dependencies:
+      - target: SalesCoach
+
+schemes:
+  SalesCoach:
+    build:
+      targets:
+        SalesCoach: all
+        SalesCoachTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - SalesCoachTests
+    archive:
+      config: Release
+

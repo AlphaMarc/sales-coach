@@ -1,0 +1,129 @@
+default_platform(:mac)
+
+platform :mac do
+  desc "Build debug version"
+  lane :build_debug do
+    # Copy whisper binaries to resources if they exist
+    if File.exist?("../whisper.cpp/main")
+      sh("cp ../whisper.cpp/main ../SalesCoach/Resources/whisper-cli")
+    end
+    
+    # Copy multilingual model (prioritized) or fallback to English-only
+    if File.exist?("../SalesCoach/Resources/ggml-base.bin")
+      UI.message("Using existing multilingual model (ggml-base.bin)")
+    elsif File.exist?("../whisper.cpp/models/ggml-base.bin")
+      sh("cp ../whisper.cpp/models/ggml-base.bin ../SalesCoach/Resources/")
+      UI.message("Copied multilingual model from whisper.cpp")
+    elsif File.exist?("../whisper.cpp/models/ggml-base.en.bin")
+      sh("cp ../whisper.cpp/models/ggml-base.en.bin ../SalesCoach/Resources/")
+      UI.message("Copied English-only model (multilingual not available)")
+    end
+    
+    # Clean and create build directory
+    sh("rm -rf ../build && mkdir -p ../build")
+    
+    # Build using xcodebuild directly for local development
+    xcodebuild(
+      project: "SalesCoach/SalesCoach.xcodeproj",
+      scheme: "SalesCoach",
+      configuration: "Debug",
+      build_settings: {
+        "CODE_SIGN_IDENTITY" => "-",
+        "CODE_SIGNING_REQUIRED" => "NO",
+        "CODE_SIGNING_ALLOWED" => "NO",
+        "CONFIGURATION_BUILD_DIR" => File.expand_path("../build")
+      },
+      build: true
+    )
+    
+    # Copy whisper-cli to app bundle Resources (Xcode doesn't copy executables without extension)
+    app_resources = File.expand_path("../build/SalesCoach.app/Contents/Resources")
+    whisper_src = File.expand_path("../SalesCoach/Resources/whisper-cli")
+    if File.exist?(whisper_src)
+      sh("cp '#{whisper_src}' '#{app_resources}/'")
+      sh("chmod +x '#{app_resources}/whisper-cli'")
+      UI.success("Copied whisper-cli to app bundle")
+    else
+      UI.error("whisper-cli not found at #{whisper_src}")
+    end
+    
+    # Copy multilingual model to app bundle (in case Xcode didn't include it)
+    model_src = File.expand_path("../SalesCoach/Resources/ggml-base.bin")
+    if File.exist?(model_src) && !File.exist?("#{app_resources}/ggml-base.bin")
+      sh("cp '#{model_src}' '#{app_resources}/'")
+      UI.success("Copied multilingual model (ggml-base.bin) to app bundle")
+    end
+  end
+
+  desc "Build release version"
+  lane :build_release do
+    # Copy whisper binaries to resources
+    if File.exist?("../whisper.cpp/main")
+      sh("cp ../whisper.cpp/main ../SalesCoach/Resources/whisper-cli")
+    end
+    
+    # Copy multilingual model (prioritized) or fallback to English-only
+    if File.exist?("../SalesCoach/Resources/ggml-base.bin")
+      UI.message("Using existing multilingual model (ggml-base.bin)")
+    elsif File.exist?("../whisper.cpp/models/ggml-base.bin")
+      sh("cp ../whisper.cpp/models/ggml-base.bin ../SalesCoach/Resources/")
+      UI.message("Copied multilingual model from whisper.cpp")
+    elsif File.exist?("../whisper.cpp/models/ggml-base.en.bin")
+      sh("cp ../whisper.cpp/models/ggml-base.en.bin ../SalesCoach/Resources/")
+      UI.message("Copied English-only model (multilingual not available)")
+    end
+    
+    build_mac_app(
+      project: "SalesCoach/SalesCoach.xcodeproj",
+      scheme: "SalesCoach",
+      configuration: "Release",
+      output_directory: "./build",
+      output_name: "SalesCoach.app",
+      skip_codesigning: true,
+      clean: true
+    )
+    
+    # Copy whisper-cli to app bundle Resources (Xcode doesn't copy executables without extension)
+    app_resources = File.expand_path("../build/SalesCoach.app/Contents/Resources")
+    whisper_src = File.expand_path("../SalesCoach/Resources/whisper-cli")
+    if File.exist?(whisper_src)
+      sh("cp '#{whisper_src}' '#{app_resources}/'")
+      sh("chmod +x '#{app_resources}/whisper-cli'")
+      UI.success("Copied whisper-cli to app bundle")
+    else
+      UI.error("whisper-cli not found at #{whisper_src}")
+    end
+    
+    # Copy multilingual model to app bundle (in case Xcode didn't include it)
+    model_src = File.expand_path("../SalesCoach/Resources/ggml-base.bin")
+    if File.exist?(model_src) && !File.exist?("#{app_resources}/ggml-base.bin")
+      sh("cp '#{model_src}' '#{app_resources}/'")
+      UI.success("Copied multilingual model (ggml-base.bin) to app bundle")
+    end
+    
+    # Create DMG
+    sh("hdiutil create -volname SalesCoach -srcfolder ./build/SalesCoach.app -ov -format UDZO ./build/SalesCoach.dmg")
+  end
+
+  desc "Build and run the app"
+  lane :launch do
+    # Build the debug version first
+    build_debug
+    
+    # Launch the app
+    app_path = File.expand_path("../build/SalesCoach.app")
+    UI.message("Launching SalesCoach...")
+    sh("open '#{app_path}'")
+  end
+
+  desc "Run tests"
+  lane :test do
+    run_tests(
+      project: "SalesCoach/SalesCoach.xcodeproj",
+      scheme: "SalesCoach",
+      destination: "platform=macOS",
+      skip_build: false
+    )
+  end
+end
+

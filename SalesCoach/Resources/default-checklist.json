@@ -1,0 +1,36 @@
+{
+  "name": "MEDDIC Sales Process",
+  "stages": [
+    {
+      "name": "Opening",
+      "description": "Establish rapport and set agenda",
+      "requiredTopics": ["introduction", "agenda", "time check"]
+    },
+    {
+      "name": "Discovery",
+      "description": "Understand customer pain points and needs",
+      "requiredTopics": ["current challenges", "pain points", "impact"]
+    },
+    {
+      "name": "Qualification",
+      "description": "Identify decision makers and process",
+      "requiredTopics": ["decision maker", "budget", "timeline"]
+    },
+    {
+      "name": "Value Proposition",
+      "description": "Present solution and value",
+      "requiredTopics": ["solution overview", "benefits", "differentiation"]
+    },
+    {
+      "name": "Objection Handling",
+      "description": "Address concerns and objections",
+      "requiredTopics": ["concerns", "competitor comparison", "risk mitigation"]
+    },
+    {
+      "name": "Closing",
+      "description": "Agree on next steps and close",
+      "requiredTopics": ["next steps", "timeline", "commitment"]
+    }
+  ]
+}
+

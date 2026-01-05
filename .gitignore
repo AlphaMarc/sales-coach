@@ -1,0 +1,199 @@
+# ====================
+# BUILD OUTPUTS
+# ====================
+
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xccheckout
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+Packages/
+Package.pins
+Package.resolved
+.swiftpm/
+
+# CocoaPods
+Pods/
+*.xcworkspace
+
+# Compiled object files
+*.o
+*.obj
+*.a
+*.dylib
+*.so
+
+# ====================
+# ML MODELS & BINARIES
+# ====================
+
+# Whisper/GGML models (download during setup)
+*.bin
+*.gguf
+*.ggml
+ggml-*.bin
+
+# CoreML models
+*.mlmodel
+*.mlmodelc/
+*.mlpackage/
+
+# Other ML model formats
+*.onnx
+*.pt
+*.pth
+*.safetensors
+*.h5
+*.pb
+
+# whisper.cpp source (built/downloaded during setup)
+whisper.cpp/
+
+# Compiled CLI tools (these should be built from source)
+SalesCoach/Resources/whisper-cli
+
+# ====================
+# SECRETS & CREDENTIALS
+# ====================
+
+# Environment files
+.env
+.env.*
+.env.local
+.env.*.local
+!.env.example
+!.env.template
+
+# API keys and credentials
+*.pem
+*.p12
+*.key
+*.keystore
+*.jks
+credentials.json
+secrets.json
+service-account*.json
+**/secrets/
+**/credentials/
+
+# macOS Keychain exports
+*.keychain
+*.keychain-db
+
+# Fastlane match certificates
+fastlane/match/
+
+# Apple provisioning profiles
+*.mobileprovision
+*.provisionprofile
+
+# ====================
+# FASTLANE
+# ====================
+
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+# Keep Fastfile and Appfile, ignore generated docs
+fastlane/README.md
+
+# ====================
+# RUBY / BUNDLER
+# ====================
+
+.bundle/
+vendor/bundle/
+vendor/ruby/
+# Note: Gemfile.lock is committed for reproducible builds
+
+# ====================
+# IDE & EDITORS
+# ====================
+
+.idea/
+*.swp
+*.swo
+*~
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.cursor/
+
+# ====================
+# macOS
+# ====================
+
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# ====================
+# TEMPORARY & CACHE
+# ====================
+
+*.tmp
+*.temp
+*.cache
+.cache/
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+logs/
+
+# Test outputs
+TestResults.xcresult/
+test-results/
+coverage/
+
+# ====================
+# ARCHIVES & PACKAGES
+# ====================
+
+*.zip
+*.tar.gz
+*.tar.bz2
+*.tgz
+*.dmg
+*.pkg
+*.app
+!SalesCoach.app # Keep the app if explicitly added
+
+# ====================
+# AUDIO/MEDIA FILES
+# ====================
+
+# Recorded audio (can be large)
+recordings/
+*.wav
+*.mp3
+*.m4a
+*.aac
+*.flac
+!samples/*.wav  # Keep sample files if needed
+
+# ====================
+# DATABASE & PERSISTENCE
+# ====================
+
+*.sqlite
+*.sqlite3
+*.db
+*.realm

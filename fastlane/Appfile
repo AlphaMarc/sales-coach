@@ -1,0 +1,11 @@
+# Fastlane Appfile for SalesCoach
+
+# App identifier (bundle ID)
+app_identifier "com.salescoach.app"
+
+# Apple Developer account (optional - needed for signing)
+# apple_id "your-email@example.com"
+
+# Team ID (optional - needed for signing)
+# team_id "XXXXXXXXXX"
+
