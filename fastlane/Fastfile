@@ -73,14 +73,21 @@ platform :mac do
       UI.message("Copied English-only model (multilingual not available)")
     end
     
-    build_mac_app(
+    # Clean and create build directory
+    sh("rm -rf ../build && mkdir -p ../build")
+    
+    # Build using xcodebuild directly (more reliable for CI without code signing)
+    xcodebuild(
       project: "SalesCoach/SalesCoach.xcodeproj",
       scheme: "SalesCoach",
       configuration: "Release",
-      output_directory: "./build",
-      output_name: "SalesCoach.app",
-      skip_codesigning: true,
-      clean: true
+      build_settings: {
+        "CODE_SIGN_IDENTITY" => "-",
+        "CODE_SIGNING_REQUIRED" => "NO",
+        "CODE_SIGNING_ALLOWED" => "NO",
+        "CONFIGURATION_BUILD_DIR" => File.expand_path("../build")
+      },
+      build: true
     )
     
     # Copy whisper-cli to app bundle Resources (Xcode doesn't copy executables without extension)
@@ -102,7 +109,7 @@ platform :mac do
     end
     
     # Create DMG
-    sh("hdiutil create -volname SalesCoach -srcfolder ./build/SalesCoach.app -ov -format UDZO ./build/SalesCoach.dmg")
+    sh("hdiutil create -volname SalesCoach -srcfolder ../build/SalesCoach.app -ov -format UDZO ../build/SalesCoach.dmg")
   end
 
   desc "Build and run the app"
