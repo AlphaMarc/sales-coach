@@ -51,13 +51,10 @@ struct MainView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
-        
-        Divider()
+        .padding(.horizontal, 8)
         
         // Recording controls
         SessionControlBar()
-        
-        Divider()
         
         // Settings button
         Button {
@@ -65,6 +62,7 @@ struct MainView: View {
         } label: {
             Image(systemName: "gear")
         }
+        .padding(.horizontal, 8)
         .keyboardShortcut(",", modifiers: .command)
     }
     
