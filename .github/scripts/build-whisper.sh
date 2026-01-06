@@ -13,50 +13,79 @@ fi
 
 cd whisper.cpp
 
-# Build for Apple Silicon
-echo "Building whisper.cpp for Apple Silicon..."
-make clean
-CFLAGS="-O3 -DNDEBUG" make main
-
-# Verify build
+# Build for Apple Silicon (skip if already built)
 if [ ! -f "main" ]; then
-  echo "Error: whisper.cpp build failed"
-  exit 1
+  echo "Building whisper.cpp for Apple Silicon..."
+  make clean
+  CFLAGS="-O3 -DNDEBUG" make main
+  
+  # Verify build
+  if [ ! -f "main" ]; then
+    echo "Error: whisper.cpp build failed"
+    exit 1
+  fi
+  echo "whisper.cpp binary built successfully"
+else
+  echo "whisper.cpp binary already exists, skipping build"
 fi
 
-echo "whisper.cpp binary built successfully"
-
-# Download model if not cached
+# Download English-only model if not cached
 if [ ! -f "models/ggml-base.en.bin" ]; then
   echo "Downloading whisper base.en model..."
   bash ./models/download-ggml-model.sh base.en
 fi
 
-# Verify model
+# Verify English model
 if [ ! -f "models/ggml-base.en.bin" ]; then
-  echo "Error: Failed to download whisper model"
+  echo "Error: Failed to download whisper base.en model"
+  exit 1
+fi
+
+# Download multilingual model if not cached
+if [ ! -f "models/ggml-base.bin" ]; then
+  echo "Downloading whisper base model (multilingual)..."
+  bash ./models/download-ggml-model.sh base
+fi
+
+# Verify multilingual model
+if [ ! -f "models/ggml-base.bin" ]; then
+  echo "Error: Failed to download whisper base model (multilingual)"
   exit 1
 fi
 
 echo "whisper.cpp build complete"
 echo "Binary: $(pwd)/main"
-echo "Model: $(pwd)/models/ggml-base.en.bin"
+echo "Model (en): $(pwd)/models/ggml-base.en.bin"
+echo "Model (multilingual): $(pwd)/models/ggml-base.bin"
 
 # Copy to SalesCoach Resources
 cd ..
 echo "Copying binaries to SalesCoach/Resources..."
+mkdir -p SalesCoach/Resources
+
 cp whisper.cpp/main SalesCoach/Resources/whisper-cli
 cp whisper.cpp/models/ggml-base.en.bin SalesCoach/Resources/
+cp whisper.cpp/models/ggml-base.bin SalesCoach/Resources/
 
-# Download base model (multilingual) if needed
+# Verify all files copied
+echo "=== Verifying SalesCoach/Resources ==="
+ls -la SalesCoach/Resources/
+
+if [ ! -f "SalesCoach/Resources/whisper-cli" ]; then
+  echo "Error: whisper-cli not copied"
+  exit 1
+fi
+
+if [ ! -f "SalesCoach/Resources/ggml-base.en.bin" ]; then
+  echo "Error: ggml-base.en.bin not copied"
+  exit 1
+fi
+
 if [ ! -f "SalesCoach/Resources/ggml-base.bin" ]; then
-  echo "Downloading whisper base model (multilingual)..."
-  cd whisper.cpp
-  bash ./models/download-ggml-model.sh base
-  cd ..
-  cp whisper.cpp/models/ggml-base.bin SalesCoach/Resources/
+  echo "Error: ggml-base.bin not copied"
+  exit 1
 fi
 
 echo "=== whisper.cpp setup complete ==="
-echo "Resources copied to SalesCoach/Resources/"
+echo "All resources copied to SalesCoach/Resources/"
 

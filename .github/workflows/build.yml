@@ -32,14 +32,14 @@ jobs:
           path: |
             whisper.cpp/main
             whisper.cpp/models/ggml-base.en.bin
+            whisper.cpp/models/ggml-base.bin
           key: whisper-${{ hashFiles('.github/scripts/build-whisper.sh') }}
       
       - name: Build whisper.cpp
         run: |
           chmod +x .github/scripts/build-whisper.sh
-          if [ ! -f "whisper.cpp/main" ]; then
-            .github/scripts/build-whisper.sh
-          fi
+          # Always run the script - it handles caching checks internally
+          .github/scripts/build-whisper.sh
       
       - name: Install Ruby dependencies
         run: |
