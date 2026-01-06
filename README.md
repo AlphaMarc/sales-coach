@@ -1,4 +1,4 @@
-# Sales Coach
+# Real-time Sales Coach running locally on your Mac
 
 A native macOS application for real-time sales call transcription and AI-powered coaching.
 
@@ -12,11 +12,19 @@ A native macOS application for real-time sales call transcription and AI-powered
 ![!\[alt text\](sales coach preview image)
 ](docs/assets/sales-coach-preview.png)
 
+Turn any live call into actionable guidance as it happens — without sending raw audio to the cloud.
+
+This app captures microphone audio on macOS, generates a real-time transcript locally (via whisper.cpp), and runs a lightweight “coach” every few seconds to help reps stay on track. The coach can:
+
 - **Real-time Transcription** - Local speech-to-text using whisper.cpp on Apple Silicon
 - **AI Coaching** - Intelligent analysis with process adherence tracking
 - **MEDDIC Framework** - Automatic extraction and tracking of qualification data
 - **Privacy-First** - Fully offline operation with local models
 - **Export** - Session export in JSON, plain text, or CSV
+
+It’s local-first by design: in local mode, audio never leaves your machine — only transcript text is used for coaching, and even that can run against a local model via LM Studio. Want cloud power when needed? Flip a setting, drop in an API key, and keep the exact same workflow.
+
+The result: a private, low-latency, always-on companion that helps reps run better calls in the moment, and leaves you with clean transcript + structured MEDDIC notes afterwards.
 
 ## Quick Start
 
