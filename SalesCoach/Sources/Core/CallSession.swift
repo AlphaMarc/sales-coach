@@ -103,22 +103,6 @@ actor CallSession {
         guard !isRunning else { return }
         
         // Setup Langfuse session tracking
-        // #region agent log
-        let debugLogPath = "/Users/mallaire/Documents/sales-assistant/.cursor/debug.log"
-        let h1_sessionLangfuseNil = langfuseService == nil
-        var h1_sessionIsEnabled = false
-        if let svc = langfuseService {
-            h1_sessionIsEnabled = await svc.isEnabled
-        }
-        let logEntry0 = "{\"location\":\"CallSession.swift:105\",\"message\":\"H1/H2: session start langfuse check\",\"data\":{\"serviceNil\":\(h1_sessionLangfuseNil),\"isEnabled\":\(h1_sessionIsEnabled)},\"timestamp\":\(Int(Date().timeIntervalSince1970 * 1000)),\"sessionId\":\"debug-session\",\"hypothesisId\":\"H1\"}\n"
-        if let data0 = logEntry0.data(using: .utf8), let handle0 = FileHandle(forWritingAtPath: debugLogPath) {
-            handle0.seekToEndOfFile()
-            handle0.write(data0)
-            handle0.closeFile()
-        } else if let data0 = logEntry0.data(using: .utf8) {
-            FileManager.default.createFile(atPath: debugLogPath, contents: data0, attributes: nil)
-        }
-        // #endregion
         if let service = langfuseService, await service.isEnabled {
             await service.setSessionId(sessionId)
             

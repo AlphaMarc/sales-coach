@@ -2,22 +2,6 @@ import Foundation
 import SwiftUI
 import Combine
 
-// #region agent log
-private let debugLogPath = "/Users/mallaire/Documents/sales-assistant/.cursor/debug.log"
-private func debugLog(_ location: String, _ message: String, _ data: [String: Any] = [:], hypothesis: String = "") {
-    let entry: [String: Any] = ["timestamp": Date().timeIntervalSince1970 * 1000, "location": location, "message": message, "data": data, "hypothesisId": hypothesis, "sessionId": "debug-session"]
-    if let jsonData = try? JSONSerialization.data(withJSONObject: entry), let jsonString = String(data: jsonData, encoding: .utf8) {
-        if let handle = FileHandle(forWritingAtPath: debugLogPath) {
-            handle.seekToEndOfFile()
-            handle.write((jsonString + "\n").data(using: .utf8)!)
-            handle.closeFile()
-        } else {
-            FileManager.default.createFile(atPath: debugLogPath, contents: (jsonString + "\n").data(using: .utf8))
-        }
-    }
-}
-// #endregion
-
 /// Global application state
 @MainActor
 class AppState: ObservableObject {
@@ -47,23 +31,11 @@ class AppState: ObservableObject {
     // MARK: - Initialization
     
     init() {
-        // #region agent log
-        debugLog("AppState.swift:init", "AppState init started", ["connectionStatus": "idle"], hypothesis: "H1")
-        // #endregion
-        
         self.settingsStore = SettingsStore()
         self.settings = settingsStore.load()
         
-        // #region agent log
-        debugLog("AppState.swift:init", "Settings loaded", ["llmMode": settings.llmMode.rawValue, "baseURL": settings.localLLMConfig.baseURL], hypothesis: "H1")
-        // #endregion
-        
         setupSettingsObserver()
         configureLangfuse()
-        
-        // #region agent log
-        debugLog("AppState.swift:init", "AppState init completed - NO connection test called", ["connectionStatus": "idle"], hypothesis: "H1")
-        // #endregion
     }
     
     // MARK: - Langfuse Configuration
@@ -259,29 +231,14 @@ class AppState: ObservableObject {
     // MARK: - LLM Connection
     
     func testLLMConnection() async {
-        // #region agent log
-        debugLog("AppState.swift:testLLMConnection", "testLLMConnection called", ["currentStatus": connectionStatus.displayText], hypothesis: "H1,H2")
-        // #endregion
-        
         connectionStatus = .connecting
         
         do {
             let client = createLLMClient()
-            // #region agent log
-            debugLog("AppState.swift:testLLMConnection", "LLM client created, testing connection", ["llmMode": settings.llmMode.rawValue], hypothesis: "H5")
-            // #endregion
-            
             let success = try await client.testConnection()
             connectionStatus = success ? .connected : .error("Connection test failed")
-            
-            // #region agent log
-            debugLog("AppState.swift:testLLMConnection", "Connection test completed", ["success": success, "newStatus": connectionStatus.displayText], hypothesis: "H1,H2")
-            // #endregion
         } catch {
             connectionStatus = .error(error.localizedDescription)
-            // #region agent log
-            debugLog("AppState.swift:testLLMConnection", "Connection test failed with error", ["error": error.localizedDescription], hypothesis: "H4,H5")
-            // #endregion
         }
     }
     

@@ -1,21 +1,5 @@
 import SwiftUI
 
-// #region agent log
-private let debugLogPath = "/Users/mallaire/Documents/sales-assistant/.cursor/debug.log"
-private func debugLog(_ location: String, _ message: String, _ data: [String: Any] = [:], hypothesis: String = "") {
-    let entry: [String: Any] = ["timestamp": Date().timeIntervalSince1970 * 1000, "location": location, "message": message, "data": data, "hypothesisId": hypothesis, "sessionId": "debug-session"]
-    if let jsonData = try? JSONSerialization.data(withJSONObject: entry), let jsonString = String(data: jsonData, encoding: .utf8) {
-        if let handle = FileHandle(forWritingAtPath: debugLogPath) {
-            handle.seekToEndOfFile()
-            handle.write((jsonString + "\n").data(using: .utf8)!)
-            handle.closeFile()
-        } else {
-            FileManager.default.createFile(atPath: debugLogPath, contents: (jsonString + "\n").data(using: .utf8))
-        }
-    }
-}
-// #endregion
-
 /// Settings view for app configuration
 struct SettingsView: View {
     @EnvironmentObject private var appState: AppState
@@ -211,10 +195,6 @@ struct LLMSettingsTab: View {
     }
     
     private func testConnection() {
-        // #region agent log
-        debugLog("SettingsView.swift:testConnection", "Manual test connection button pressed", [:], hypothesis: "H1")
-        // #endregion
-        
         isTestingConnection = true
         testResult = nil
         
@@ -223,10 +203,6 @@ struct LLMSettingsTab: View {
             
             await MainActor.run {
                 isTestingConnection = false
-                
-                // #region agent log
-                debugLog("SettingsView.swift:testConnection", "Connection test completed", ["status": appState.connectionStatus.displayText], hypothesis: "H1")
-                // #endregion
                 
                 switch appState.connectionStatus {
                 case .connected:

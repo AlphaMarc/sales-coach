@@ -1,21 +1,5 @@
 import SwiftUI
 
-// #region agent log
-private let debugLogPath = "/Users/mallaire/Documents/sales-assistant/.cursor/debug.log"
-private func debugLog(_ location: String, _ message: String, _ data: [String: Any] = [:], hypothesis: String = "") {
-    let entry: [String: Any] = ["timestamp": Date().timeIntervalSince1970 * 1000, "location": location, "message": message, "data": data, "hypothesisId": hypothesis, "sessionId": "debug-session"]
-    if let jsonData = try? JSONSerialization.data(withJSONObject: entry), let jsonString = String(data: jsonData, encoding: .utf8) {
-        if let handle = FileHandle(forWritingAtPath: debugLogPath) {
-            handle.seekToEndOfFile()
-            handle.write((jsonString + "\n").data(using: .utf8)!)
-            handle.closeFile()
-        } else {
-            FileManager.default.createFile(atPath: debugLogPath, contents: (jsonString + "\n").data(using: .utf8))
-        }
-    }
-}
-// #endregion
-
 /// Main application view with split layout
 struct MainView: View {
     @EnvironmentObject private var appState: AppState
@@ -49,22 +33,9 @@ struct MainView: View {
         } message: {
             Text(appState.errorMessage ?? "")
         }
-        // #region agent log
-        .onAppear {
-            debugLog("MainView.swift:onAppear", "MainView appeared", ["connectionStatus": appState.connectionStatus.displayText], hypothesis: "H2")
-        }
-        // #endregion
         .task {
-            // #region agent log
-            debugLog("MainView.swift:task", "Starting automatic connection test on launch", ["currentStatus": appState.connectionStatus.displayText], hypothesis: "H1-FIX")
-            // #endregion
-            
             // Automatically test LLM connection on app launch
             await appState.testLLMConnection()
-            
-            // #region agent log
-            debugLog("MainView.swift:task", "Automatic connection test completed", ["newStatus": appState.connectionStatus.displayText], hypothesis: "H1-FIX")
-            // #endregion
         }
         .focusEffectDisabled()
     }

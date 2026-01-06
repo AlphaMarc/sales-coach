@@ -2,12 +2,15 @@
 
 A native macOS application for real-time sales call transcription and AI-powered coaching.
 
-[![Build](https://github.com/your-org/sales-coach/actions/workflows/build.yml/badge.svg)](https://github.com/your-org/sales-coach/actions/workflows/build.yml)
+[![Build macOS App](https://github.com/AlphaMarc/sales-coach/actions/workflows/build.yml/badge.svg)](https://github.com/AlphaMarc/sales-coach/actions/workflows/build.yml)
 ![macOS](https://img.shields.io/badge/macOS-14.0+-blue)
 ![Swift](https://img.shields.io/badge/Swift-5.9+-orange)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 ## Features
+
+![!\[alt text\](sales coach preview image)
+](docs/assets/sales-coach-preview.png)
 
 - **Real-time Transcription** - Local speech-to-text using whisper.cpp on Apple Silicon
 - **AI Coaching** - Intelligent analysis with process adherence tracking
