@@ -90,3 +90,4 @@ struct TranscriptBuffer: Equatable {
     }
 }
 
+

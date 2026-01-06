@@ -115,3 +115,4 @@ Run whisper as a separate local service (HTTP API).
 - [whisper.cpp JSON output documentation](https://github.com/ggerganov/whisper.cpp#output-formats)
 - [Swift Process documentation](https://developer.apple.com/documentation/foundation/process)
 
+

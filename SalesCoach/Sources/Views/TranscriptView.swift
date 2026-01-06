@@ -186,3 +186,4 @@ struct PartialTextView: View {
         .frame(width: 500, height: 600)
 }
 
+

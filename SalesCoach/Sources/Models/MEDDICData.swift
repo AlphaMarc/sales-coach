@@ -116,3 +116,4 @@ struct EvidenceQuote: Codable, Equatable, Identifiable {
     }
 }
 
+
