@@ -88,25 +88,6 @@
             ReferencedContainer = "container:SalesCoach.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <CommandLineArguments>
-      </CommandLineArguments>
-      <EnvironmentVariables>
-         <EnvironmentVariable
-            key = "LANGFUSE_SECRET_KEY"
-            value = "sk-lf-0c087a15-0b93-4a53-93f1-6a142cbf9d"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "LANGFUSE_PUBLIC_KEY"
-            value = "pk-lf-e7611d97-2698-4922-be98-51c4076142"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "LANGFUSE_BASE_URL"
-            value = "https://cloud.langfuse.com"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-      </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
