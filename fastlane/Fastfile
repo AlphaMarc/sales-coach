@@ -8,15 +8,23 @@ platform :mac do
       sh("cp ../whisper.cpp/main ../SalesCoach/Resources/whisper-cli")
     end
     
-    # Copy multilingual model (prioritized) or fallback to English-only
-    if File.exist?("../SalesCoach/Resources/ggml-base.bin")
-      UI.message("Using existing multilingual model (ggml-base.bin)")
-    elsif File.exist?("../whisper.cpp/models/ggml-base.bin")
-      sh("cp ../whisper.cpp/models/ggml-base.bin ../SalesCoach/Resources/")
-      UI.message("Copied multilingual model from whisper.cpp")
-    elsif File.exist?("../whisper.cpp/models/ggml-base.en.bin")
-      sh("cp ../whisper.cpp/models/ggml-base.en.bin ../SalesCoach/Resources/")
-      UI.message("Copied English-only model (multilingual not available)")
+    # Copy Large v3 Turbo model and Core ML encoder
+    model_name = "ggml-large-v3-turbo-q5_0.bin"
+    encoder_name = "ggml-large-v3-turbo-encoder.mlmodelc"
+    
+    if File.exist?("../whisper.cpp/models/#{model_name}")
+      sh("cp ../whisper.cpp/models/#{model_name} ../SalesCoach/Resources/")
+      UI.message("Copied #{model_name} from whisper.cpp")
+    end
+    
+    if File.exist?("../whisper.cpp/models/#{encoder_name}")
+      sh("cp -R ../whisper.cpp/models/#{encoder_name} ../SalesCoach/Resources/")
+      UI.message("Copied #{encoder_name} from whisper.cpp")
+    end
+    
+    if File.exist?("../whisper.cpp/ggml-metal.metal")
+      sh("cp ../whisper.cpp/ggml-metal.metal ../SalesCoach/Resources/")
+      UI.message("Copied ggml-metal.metal from whisper.cpp")
     end
     
     # Clean and create build directory
@@ -47,11 +55,23 @@ platform :mac do
       UI.error("whisper-cli not found at #{whisper_src}")
     end
     
-    # Copy multilingual model to app bundle (in case Xcode didn't include it)
-    model_src = File.expand_path("../SalesCoach/Resources/ggml-base.bin")
-    if File.exist?(model_src) && !File.exist?("#{app_resources}/ggml-base.bin")
+    # Copy model and Core ML artifacts to app bundle (in case Xcode didn't include them)
+    model_src = File.expand_path("../SalesCoach/Resources/#{model_name}")
+    if File.exist?(model_src) && !File.exist?("#{app_resources}/#{model_name}")
       sh("cp '#{model_src}' '#{app_resources}/'")
-      UI.success("Copied multilingual model (ggml-base.bin) to app bundle")
+      UI.success("Copied #{model_name} to app bundle")
+    end
+    
+    encoder_src = File.expand_path("../SalesCoach/Resources/#{encoder_name}")
+    if File.exist?(encoder_src) && !File.exist?("#{app_resources}/#{encoder_name}")
+      sh("cp -R '#{encoder_src}' '#{app_resources}/'")
+      UI.success("Copied #{encoder_name} to app bundle")
+    end
+    
+    metal_src = File.expand_path("../SalesCoach/Resources/ggml-metal.metal")
+    if File.exist?(metal_src) && !File.exist?("#{app_resources}/ggml-metal.metal")
+      sh("cp '#{metal_src}' '#{app_resources}/'")
+      UI.success("Copied ggml-metal.metal to app bundle")
     end
   end
 
@@ -62,15 +82,23 @@ platform :mac do
       sh("cp ../whisper.cpp/main ../SalesCoach/Resources/whisper-cli")
     end
     
-    # Copy multilingual model (prioritized) or fallback to English-only
-    if File.exist?("../SalesCoach/Resources/ggml-base.bin")
-      UI.message("Using existing multilingual model (ggml-base.bin)")
-    elsif File.exist?("../whisper.cpp/models/ggml-base.bin")
-      sh("cp ../whisper.cpp/models/ggml-base.bin ../SalesCoach/Resources/")
-      UI.message("Copied multilingual model from whisper.cpp")
-    elsif File.exist?("../whisper.cpp/models/ggml-base.en.bin")
-      sh("cp ../whisper.cpp/models/ggml-base.en.bin ../SalesCoach/Resources/")
-      UI.message("Copied English-only model (multilingual not available)")
+    # Copy Large v3 Turbo model and Core ML encoder
+    model_name = "ggml-large-v3-turbo-q5_0.bin"
+    encoder_name = "ggml-large-v3-turbo-encoder.mlmodelc"
+    
+    if File.exist?("../whisper.cpp/models/#{model_name}")
+      sh("cp ../whisper.cpp/models/#{model_name} ../SalesCoach/Resources/")
+      UI.message("Copied #{model_name} from whisper.cpp")
+    end
+    
+    if File.exist?("../whisper.cpp/models/#{encoder_name}")
+      sh("cp -R ../whisper.cpp/models/#{encoder_name} ../SalesCoach/Resources/")
+      UI.message("Copied #{encoder_name} from whisper.cpp")
+    end
+    
+    if File.exist?("../whisper.cpp/ggml-metal.metal")
+      sh("cp ../whisper.cpp/ggml-metal.metal ../SalesCoach/Resources/")
+      UI.message("Copied ggml-metal.metal from whisper.cpp")
     end
     
     # Clean and create build directory
@@ -101,11 +129,23 @@ platform :mac do
       UI.error("whisper-cli not found at #{whisper_src}")
     end
     
-    # Copy multilingual model to app bundle (in case Xcode didn't include it)
-    model_src = File.expand_path("../SalesCoach/Resources/ggml-base.bin")
-    if File.exist?(model_src) && !File.exist?("#{app_resources}/ggml-base.bin")
+    # Copy model and Core ML artifacts to app bundle (in case Xcode didn't include them)
+    model_src = File.expand_path("../SalesCoach/Resources/#{model_name}")
+    if File.exist?(model_src) && !File.exist?("#{app_resources}/#{model_name}")
       sh("cp '#{model_src}' '#{app_resources}/'")
-      UI.success("Copied multilingual model (ggml-base.bin) to app bundle")
+      UI.success("Copied #{model_name} to app bundle")
+    end
+    
+    encoder_src = File.expand_path("../SalesCoach/Resources/#{encoder_name}")
+    if File.exist?(encoder_src) && !File.exist?("#{app_resources}/#{encoder_name}")
+      sh("cp -R '#{encoder_src}' '#{app_resources}/'")
+      UI.success("Copied #{encoder_name} to app bundle")
+    end
+    
+    metal_src = File.expand_path("../SalesCoach/Resources/ggml-metal.metal")
+    if File.exist?(metal_src) && !File.exist?("#{app_resources}/ggml-metal.metal")
+      sh("cp '#{metal_src}' '#{app_resources}/'")
+      UI.success("Copied ggml-metal.metal to app bundle")
     end
     
     # Create DMG

@@ -235,22 +235,27 @@ actor CallSession {
     // MARK: - Helpers
     
     private func getModelPath() -> URL {
-        // Try multilingual model in bundle first (supports English, French, etc.)
+        // Priority 1: Large v3 Turbo (Quantized)
+        if let bundlePath = Bundle.main.path(forResource: "ggml-large-v3-turbo-q5_0", ofType: "bin") {
+            return URL(fileURLWithPath: bundlePath)
+        }
+        
+        // Priority 2: Multilingual base model
         if let bundlePath = Bundle.main.path(forResource: "ggml-base", ofType: "bin") {
             return URL(fileURLWithPath: bundlePath)
         }
         
-        // Fallback to English-only model in bundle
+        // Priority 3: English-only base model
         if let bundlePath = Bundle.main.path(forResource: "ggml-base.en", ofType: "bin") {
             return URL(fileURLWithPath: bundlePath)
         }
         
         // Fallback to common locations
         let possiblePaths = [
+            "/usr/local/share/whisper/ggml-large-v3-turbo-q5_0.bin",
+            "~/.cache/whisper/ggml-large-v3-turbo-q5_0.bin",
             "/usr/local/share/whisper/ggml-base.bin",
-            "~/.cache/whisper/ggml-base.bin",
-            "/usr/local/share/whisper/ggml-base.en.bin",
-            "~/.cache/whisper/ggml-base.en.bin"
+            "~/.cache/whisper/ggml-base.bin"
         ]
         
         for path in possiblePaths {
@@ -261,7 +266,7 @@ actor CallSession {
         }
         
         // Default path (may not exist)
-        return URL(fileURLWithPath: "/usr/local/share/whisper/ggml-base.bin")
+        return URL(fileURLWithPath: "/usr/local/share/whisper/ggml-large-v3-turbo-q5_0.bin")
     }
     
     // MARK: - Accessors
